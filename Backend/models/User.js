@@ -26,7 +26,8 @@ const userSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    // Optional: profilePicture: { type: String }
 });
 
 // Hash password before saving
@@ -50,5 +51,6 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
     }
 };
 
-const User = mongoose.model('User', userSchema);
-module.exports = User;
+
+// Corrected:
+const User = mongoose.model('User', userSchema); // Use 'userSchema' (the actual schema object)
