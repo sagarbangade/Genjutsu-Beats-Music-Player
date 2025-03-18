@@ -6,16 +6,14 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [tailwindcss(), react()],
   server: {
-    watch:{
-usePolling:true,
+    watch: {
+      usePolling: true,
     },
     proxy: {
       "/api": {
-        target: "http://localhost:5000", // Your backend server address
+        target: "https://genjutsu-beats-music-player.onrender.com", // Your backend server address
         changeOrigin: true,
       },
     },
   },
 });
-
-
