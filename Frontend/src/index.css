@@ -1,1 +1,37 @@
 @import "tailwindcss";
+/* Basic global styles - you can expand this */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #fafafa;
+  color: #333;
+}
+
+button {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="file"],
+textarea {
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Important to include padding in width/height */
+  width: 100%; /* Make inputs take full width of container */
+}
+
+ul {
+  list-style-type: none; /* Remove bullet points from lists */
+  padding: 0;
+}
+
+li {
+  margin-bottom: 5px; /* Spacing between list items */
+}

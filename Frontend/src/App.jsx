@@ -1,37 +1,39 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ChakraProvider, Box } from '@chakra-ui/react';
+import Navbar from './components/Layout/Navbar';
 import HomePage from './pages/HomePage';
-import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
-import Navbar from './components/Navbar';
+import ProfilePage from './pages/ProfilePage';
+import MusicPage from './pages/MusicPage';
+import PlaylistsPage from './pages/PlaylistsPage';
+import PlaylistDetailsPage from './pages/PlaylistDetailsPage';
+import { AuthProvider } from './AuthContext'; // Import AuthProvider
 
-const App = () => {
-    const isLoggedIn = () => {
-        return !!localStorage.getItem('token');
-    };
-
-    const PrivateRoute = ({ children }) => {
-        return isLoggedIn() ? children : <Navigate to="/login" />;
-    };
-
+function App() {
     return (
-        <Router>
-            <Navbar />
-            <div className="container mx-auto px-4 pt-16"> {/* Added padding below navbar */}
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/about" element={<AboutPage />} />
-                    <Route path="/contact" element={<ContactPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
-                </Routes>
-            </div>
-        </Router>
+        <ChakraProvider>
+            <Router>
+                {/* **Move AuthProvider INSIDE Router Here** */}
+                <AuthProvider>
+                    <Navbar />
+                    <Box as="main" py={8} bg="gray.100" minH="calc(100vh - 64px)">
+                        <Routes>
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/login" element={<LoginPage />} />
+                            <Route path="/register" element={<RegisterPage />} />
+                            <Route path="/profile" element={<ProfilePage />} />
+                            <Route path="/music" element={<MusicPage />} />
+                            <Route path="/playlists" element={<PlaylistsPage />} />
+                            <Route path="/playlists/:playlistId" element={<PlaylistDetailsPage />} />
+                            {/* Add more routes */}
+                        </Routes>
+                    </Box>
+                </AuthProvider>
+            </Router>
+        </ChakraProvider>
     );
-};
+}
 
 export default App;
