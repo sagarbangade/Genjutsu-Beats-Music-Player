@@ -77,7 +77,7 @@ const PlaybackHistory = mongoose.model(
 // ** 3. Middleware **
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -120,13 +120,11 @@ const authorizeOwner = (resourceType) => async (req, res, next) => {
     }
 
     if (!resource) {
-      return res
-        .status(404)
-        .send({
-          message: `${
-            resourceType.charAt(0).toUpperCase() + resourceType.slice(1)
-          } not found.`,
-        });
+      return res.status(404).send({
+        message: `${
+          resourceType.charAt(0).toUpperCase() + resourceType.slice(1)
+        } not found.`,
+      });
     }
 
     if (resource.userId.toString() !== userId) {
@@ -270,14 +268,12 @@ app.post("/api/auth/login", async (req, res) => {
       expiresIn: "1h",
     });
 
-    res
-      .status(200)
-      .send({
-        message: "Login successful.",
-        token: token,
-        userId: user._id,
-        username: user.username,
-      });
+    res.status(200).send({
+      message: "Login successful.",
+      token: token,
+      userId: user._id,
+      username: user.username,
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).send({ message: "Login failed.", error: error.message });
@@ -353,13 +349,11 @@ app.post(
     } catch (error) {
       console.error("Upload music error:", error);
       if (error instanceof multer.MulterError) {
-        return res
-          .status(400)
-          .send({
-            message: "File upload error.",
-            error: error.message,
-            field: error.field,
-          });
+        return res.status(400).send({
+          message: "File upload error.",
+          error: error.message,
+          field: error.field,
+        });
       } else {
         res
           .status(500)
@@ -402,14 +396,12 @@ app.get("/api/music", authenticateJWT, async (req, res) => {
 
     const totalCount = await Music.countDocuments(query);
 
-    res
-      .status(200)
-      .send({
-        music: musicList,
-        totalCount,
-        currentPage: parseInt(page),
-        limit: parseInt(limit),
-      });
+    res.status(200).send({
+      music: musicList,
+      totalCount,
+      currentPage: parseInt(page),
+      limit: parseInt(limit),
+    });
   } catch (error) {
     console.error("Get music list error:", error);
     res
@@ -501,19 +493,15 @@ app.post(
         try {
           parsedExistingSongIds = JSON.parse(existingSongIds);
           if (!Array.isArray(parsedExistingSongIds)) {
-            return res
-              .status(400)
-              .send({
-                message: "existingSongIds must be an array of music IDs.",
-              });
+            return res.status(400).send({
+              message: "existingSongIds must be an array of music IDs.",
+            });
           }
         } catch (error) {
-          return res
-            .status(400)
-            .send({
-              message:
-                "Invalid format for existingSongIds. Must be a JSON array of music IDs.",
-            });
+          return res.status(400).send({
+            message:
+              "Invalid format for existingSongIds. Must be a JSON array of music IDs.",
+          });
         }
 
         if (parsedExistingSongIds.length > 0) {
@@ -586,22 +574,18 @@ app.post(
         newPlaylist._id
       ).populate("songs");
 
-      res
-        .status(201)
-        .send({
-          message: "Playlist created successfully with music.",
-          playlist: populatedPlaylist,
-        });
+      res.status(201).send({
+        message: "Playlist created successfully with music.",
+        playlist: populatedPlaylist,
+      });
     } catch (error) {
       console.error("Create playlist error:", error);
       if (error instanceof multer.MulterError) {
-        return res
-          .status(400)
-          .send({
-            message: "File upload error during playlist creation.",
-            error: error.message,
-            field: error.field,
-          });
+        return res.status(400).send({
+          message: "File upload error during playlist creation.",
+          error: error.message,
+          field: error.field,
+        });
       } else {
         res
           .status(500)
@@ -636,12 +620,10 @@ app.get("/api/playlists/:playlistId", authenticateJWT, async (req, res) => {
     res.status(200).send(playlist);
   } catch (error) {
     console.error("Get playlist detail error:", error);
-    res
-      .status(500)
-      .send({
-        message: "Error fetching playlist details.",
-        error: error.message,
-      });
+    res.status(500).send({
+      message: "Error fetching playlist details.",
+      error: error.message,
+    });
   }
 });
 
@@ -666,12 +648,10 @@ app.put(
       if (!updatedPlaylist) {
         return res.status(404).send({ message: "Playlist not found." });
       }
-      res
-        .status(200)
-        .send({
-          message: "Playlist updated successfully.",
-          playlist: updatedPlaylist,
-        });
+      res.status(200).send({
+        message: "Playlist updated successfully.",
+        playlist: updatedPlaylist,
+      });
     } catch (error) {
       console.error("Update playlist error:", error);
       res
@@ -731,13 +711,11 @@ app.post(
       );
 
       if (invalidSongIds.length > 0) {
-        return res
-          .status(400)
-          .send({
-            message: `Invalid song IDs provided: ${invalidSongIds.join(
-              ", "
-            )}. Songs must exist and belong to the user.`,
-          });
+        return res.status(400).send({
+          message: `Invalid song IDs provided: ${invalidSongIds.join(
+            ", "
+          )}. Songs must exist and belong to the user.`,
+        });
       }
 
       const updatedSongs = [
@@ -754,20 +732,16 @@ app.post(
         "songs"
       );
 
-      res
-        .status(200)
-        .send({
-          message: "Songs added to playlist successfully.",
-          playlist: populatedPlaylist,
-        });
+      res.status(200).send({
+        message: "Songs added to playlist successfully.",
+        playlist: populatedPlaylist,
+      });
     } catch (error) {
       console.error("Add songs to playlist error:", error);
-      res
-        .status(500)
-        .send({
-          message: "Error adding songs to playlist.",
-          error: error.message,
-        });
+      res.status(500).send({
+        message: "Error adding songs to playlist.",
+        error: error.message,
+      });
     }
   }
 );
@@ -796,20 +770,16 @@ app.delete(
         "songs"
       );
 
-      res
-        .status(200)
-        .send({
-          message: "Song removed from playlist successfully.",
-          playlist: populatedPlaylist,
-        });
+      res.status(200).send({
+        message: "Song removed from playlist successfully.",
+        playlist: populatedPlaylist,
+      });
     } catch (error) {
       console.error("Remove song from playlist error:", error);
-      res
-        .status(500)
-        .send({
-          message: "Error removing song from playlist.",
-          error: error.message,
-        });
+      res.status(500).send({
+        message: "Error removing song from playlist.",
+        error: error.message,
+      });
     }
   }
 );
@@ -856,12 +826,10 @@ app.get("/api/history", authenticateJWT, async (req, res) => {
     res.status(200).send(history);
   } catch (error) {
     console.error("Get playback history error:", error);
-    res
-      .status(500)
-      .send({
-        message: "Error fetching playback history.",
-        error: error.message,
-      });
+    res.status(500).send({
+      message: "Error fetching playback history.",
+      error: error.message,
+    });
   }
 });
 
@@ -883,12 +851,10 @@ app.post("/api/history", authenticateJWT, async (req, res) => {
     res.status(201).send({ message: "Playback history recorded." });
   } catch (error) {
     console.error("Record playback history error:", error);
-    res
-      .status(500)
-      .send({
-        message: "Error recording playback history.",
-        error: error.message,
-      });
+    res.status(500).send({
+      message: "Error recording playback history.",
+      error: error.message,
+    });
   }
 });
 
@@ -900,12 +866,10 @@ app.delete("/api/history", authenticateJWT, async (req, res) => {
     res.status(200).send({ message: "Playback history cleared successfully." });
   } catch (error) {
     console.error("Clear playback history error:", error);
-    res
-      .status(500)
-      .send({
-        message: "Error clearing playback history.",
-        error: error.message,
-      });
+    res.status(500).send({
+      message: "Error clearing playback history.",
+      error: error.message,
+    });
   }
 });
 
